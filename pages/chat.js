@@ -74,7 +74,7 @@ export default function ChatPage() {
             padding: "16px",
           }}
         >
-          <MessageList messageList={messageList} />
+          <MessageList messageList={messageList} setMessageList={setMessageList} />
 
           <Box
             as="form"
@@ -144,7 +144,13 @@ function Header() {
   );
 }
 
-function MessageList(props) {
+function MessageList({messageList, setMessageList}) {
+    const [showButton, setShowButton] = useState(false)
+
+    const handleDeleteMessage = (id) => {
+        const newMessageList = messageList.filter( (message) => message.id !== id)
+        setMessageList(newMessageList)
+    }
   return (
     <Box
       tag="ul"
@@ -157,7 +163,7 @@ function MessageList(props) {
         marginBottom: "16px",
       }}
     >
-      {props.messageList.map((message) => {
+      {messageList.map((message) => {
         return (
           <Text
             key={message.id}
@@ -172,33 +178,59 @@ function MessageList(props) {
             }}
           >
             <Box
+            onMouseEnter={(e) => {
+                setShowButton(true) 
+            }}
+            onMouseLeave={(e) => setShowButton(false)}
               styleSheet={{
-                marginBottom: "8px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Image
-                styleSheet={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  display: "inline-block",
-                  marginRight: "8px",
-                }}
-                src={`https://github.com/vanessametonini.png`}
-              />
-              <Text tag="strong">{message.from}</Text>
-              <Text
-                styleSheet={{
-                  fontSize: "10px",
-                  marginLeft: "8px",
-                  color: appConfig.theme.colors.neutrals[300],
-                }}
-                tag="span"
-              >
-                {new Date().toLocaleDateString()}
-              </Text>
+              <Box>
+                <Box
+                  styleSheet={{
+                    marginBottom: "8px",
+                  }}
+                >
+                  <Image
+                    styleSheet={{
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                      display: "inline-block",
+                      marginRight: "8px",
+                    }}
+                    src={`https://github.com/vanessametonini.png`}
+                  />
+                  <Text tag="strong">{message.from}</Text>
+                  <Text
+                    styleSheet={{
+                      fontSize: "10px",
+                      marginLeft: "8px",
+                      color: appConfig.theme.colors.neutrals[300],
+                    }}
+                    tag="span"
+                  >
+                    {new Date().toLocaleDateString()}
+                  </Text>
+                </Box>
+                {message.text}
+              </Box>
+              {showButton  &&
+                  <Button
+                  buttonColors={{
+                    contrastColor: "#FFFFFF",
+                    mainColor: "transparent",
+                  }}
+                  colorVariant="dark"
+                  iconName="FaTrash"
+                  size="md"
+                  onClick={ (e) => handleDeleteMessage(message.id)}
+                />
+              }
             </Box>
-            {message.text}
           </Text>
         );
       })}

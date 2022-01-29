@@ -166,7 +166,7 @@ function MessageList({ messageList, setMessageList }) {
         marginBottom: "16px",
       }}
     >
-      {messageList.map((message) => {
+      {messageList && messageList.map((message) => {
         return (
           <Text
             key={message.id}

@@ -29,7 +29,7 @@ export default function ChatPage() {
       from: "romulosous",
       text: newMessage,
     };
-    setMessageList([...messageList, message]);
+    setMessageList([message, ...messageList]);
     setMessage("");
   };
 
@@ -91,7 +91,7 @@ export default function ChatPage() {
               onKeyPress={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
-                  handleNewMessage(message);
+                  if (message.length > 0) handleNewMessage(message);
                 }
               }}
               styleSheet={{
@@ -104,6 +104,14 @@ export default function ChatPage() {
                 marginRight: "12px",
                 color: appConfig.theme.colors.neutrals[200],
               }}
+            />
+            <Button
+              buttonColors={{}}
+              disabled={message.length < 1}
+              onClick={() => handleNewMessage(message)}
+              colorVariant="dark"
+              iconName="FaShare"
+              size="sm"
             />
           </Box>
         </Box>

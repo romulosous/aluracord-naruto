@@ -1,45 +1,21 @@
 import {Box, Button, Text, TextField, Image} from "@skynexui/components"
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import appConfig from "../config.json"
 
-function GlobalStyle() {
-    return (
-      <style global jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-        }
-        /* App fit Height */ 
-        html, body, #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */ 
-      `}</style>
-    );
-  }
 
-function Title(props) {
+
+export function Title(props) {
     const Tag = props.tag || "h1"
+    const colorTag = props.color || '900'
+    const fontSize = props.fontSize || '24px'
   return (
     <>
-    <GlobalStyle />
       <Tag>{props.children}</Tag>
       <style jsx>{`
         ${Tag} {
-          color: ${appConfig.theme.colors.neutrals['900']};
-          font-size: 24px;
+          color:  ${appConfig.theme.colors.neutrals[colorTag]};
+          font-size: ${fontSize};
           font-weight: 600;
         }
       `}</style>
@@ -48,11 +24,29 @@ function Title(props) {
 }
 
 export default function PaginaInicial() {
-    const username = 'romulosous';
+    const [username, setUsername] = useState('romulosous')
+    const roteamento = useRouter()
+
+    const [infoUser, setInfoUser] = useState(null)
+
+    console.log(username)
+    console.log("infoUser: ", infoUser)
+
+    useEffect(() => {
+      fetch(`https://api.github.com/users/${username}`).then((response) => response.json()).then((json) => {
+        if(json.login){
+          setInfoUser(json)
+        } else {
+          setInfoUser(null)
+        }
+      })
+    }, [username])
+
+    useEffect(() => {
+    }, [username])
   
     return (
       <>
-        <GlobalStyle />
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -79,6 +73,11 @@ export default function PaginaInicial() {
             {/* Formulário */}
             <Box
               as="form"
+              onSubmit={function (e) {
+                e.preventDefault()
+                // window.location.href = "/chat"  //forma tradicional, recarrega a pagina toda
+                roteamento.push("/chat")
+              }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -91,6 +90,8 @@ export default function PaginaInicial() {
   
               <TextField
                 fullWidth
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 textFieldColors={{
                   neutral: {
                     textColor: appConfig.theme.colors.neutrals[200],
@@ -131,13 +132,14 @@ export default function PaginaInicial() {
                 minHeight: '240px',
               }}
             >
-              <Image
+              { username.length > 2 && <Image
                 styleSheet={{
                   borderRadius: '50%',
                   marginBottom: '16px',
                 }}
                 src={`https://github.com/${username}.png`}
-              />
+                // src={infoUser?.avatar_url}
+              />}
               <Text
                 variant="body4"
                 styleSheet={{

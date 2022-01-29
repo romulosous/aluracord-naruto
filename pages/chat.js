@@ -74,7 +74,10 @@ export default function ChatPage() {
             padding: "16px",
           }}
         >
-          <MessageList messageList={messageList} setMessageList={setMessageList} />
+          <MessageList
+            messageList={messageList}
+            setMessageList={setMessageList}
+          />
 
           <Box
             as="form"
@@ -144,13 +147,13 @@ function Header() {
   );
 }
 
-function MessageList({messageList, setMessageList}) {
-    const [showButton, setShowButton] = useState(false)
+function MessageList({ messageList, setMessageList }) {
+  const [showButton, setShowButton] = useState(false);
 
-    const handleDeleteMessage = (id) => {
-        const newMessageList = messageList.filter( (message) => message.id !== id)
-        setMessageList(newMessageList)
-    }
+  const handleDeleteMessage = (id) => {
+    const newMessageList = messageList.filter((message) => message.id !== id);
+    setMessageList(newMessageList);
+  };
   return (
     <Box
       tag="ul"
@@ -178,10 +181,10 @@ function MessageList({messageList, setMessageList}) {
             }}
           >
             <Box
-            onMouseEnter={(e) => {
-                setShowButton(true) 
-            }}
-            onMouseLeave={(e) => setShowButton(false)}
+              onMouseEnter={(e) => {
+                setShowButton(true);
+              }}
+              onMouseLeave={(e) => setShowButton(false)}
               styleSheet={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -218,8 +221,8 @@ function MessageList({messageList, setMessageList}) {
                 </Box>
                 {message.text}
               </Box>
-              {showButton  &&
-                  <Button
+              {showButton && (
+                <Button
                   buttonColors={{
                     contrastColor: "#FFFFFF",
                     mainColor: "transparent",
@@ -227,9 +230,9 @@ function MessageList({messageList, setMessageList}) {
                   colorVariant="dark"
                   iconName="FaTrash"
                   size="md"
-                  onClick={ (e) => handleDeleteMessage(message.id)}
+                  onClick={(e) => handleDeleteMessage(message.id)}
                 />
-              }
+              )}
             </Box>
           </Text>
         );
